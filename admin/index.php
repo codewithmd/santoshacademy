@@ -1,27 +1,14 @@
 <?php
-session_start();
-include('config.php');
+  session_start();
 
-if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
-  // echo '<h1>user logged</h1>';
+    if (!isset($_SESSION['a_id'])) {
+
+        header("Location: login.php");
+        exit();
+    }
 
 
-  $sql = "SELECT * FROM admin WHERE admin_email = ?";
-  $query = $con->prepare($sql);
-  $query->execute([$_SESSION['admin']]);
-  // echo '<br><h1>'.$query->rowCount().'</h1>';
-
-  $alldata=$query->fetchAll(PDO::FETCH_OBJ);
-  $admin = array(); // we will store currently logged admin email and name in this 'admin' array
-  foreach($alldata as $data){
-   $admin['name'] = $data->admin_name;
-   $admin['email'] = $data->admin_email;
-
-  }
-// print_r($admin);
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,21 +26,70 @@ if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">Santosh Academy</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item px-2">
+            <a href="index.html" class="nav-link active">Dashboard</a>
+          </li>
+          <li class="nav-item px-2">
+            <a href="questions.html" class="nav-link">Questions</a>
+          </li>
+          <li class="nav-item px-2">
+            <a href="categories.html" class="nav-link">Subjects</a>
+          </li>
+          <li class="nav-item px-2">
+            <a href="users.html" class="nav-link">Users</a>
+          </li>
+        </ul>
 
-<?php include('header.php'); // including header of admin panel ?>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown mr-3">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-user"></i> Hey, &nbsp; <span class="font-weight-bold text-light"> <?php echo $_SESSION['a_email'] ?></span>
+            </a>
+            <div class="dropdown-menu">
+              <a href="profile.html" class="dropdown-item">
+                <i class="fa fa-user-circle"></i> Profile
+              </a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a href="./includes/logout.inc.php?logout=1" class="nav-link">
+              <i class="fa fa-user-times"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
+  <header id="main-header" class="py-2 btn-blue-grad text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1><i class="fa fa-gear"></i> Dashboard</h1>
+        </div>
+      </div>
+    </div>
+  </header>
 
   <!-- ACTIONS -->
   <section id="action" class="py-4 mb-4 bg-light">
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <a href="#" onclick="renderSubjects()" class="btn btn-red-grad btn-block" data-toggle="modal" data-target="#addQuestion">
-            <i class="fa fa-plus"></i> <b>Add Test</b>
+          <a href="#" class="btn btn-red-grad btn-block" data-toggle="modal" data-target="#addQuestion">
+            <i class="fa fa-plus"></i> <b>Add Question</b>
           </a>
         </div>
         <div class="col-md-3">
-          <a href="#" class="btn btn-green-grad btn-block" data-toggle="modal" data-target="#addSubjectModal">
+          <a href="#" class="btn btn-green-grad btn-block" data-toggle="modal" data-target="#addCategoryModal">
             <i class="fa fa-plus"></i> <b>Add Subject</b>
           </a>
         </div>
@@ -73,84 +109,75 @@ if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
         <div class="col-md-9">
           <div class="card">
             <div class="card-header">
-              <h4>Latest Test</h4>
+              <h4>Latest Questions</h4>
             </div>
             <table class="table table-striped">
               <thead class="thead-inverse">
                 <tr>
                   <th>#</th>
-                  <th>Name</th>
+                  <th>Title</th>
                   <th>Subject</th>
-                  <th>Date</th>
-                  <th>Detail</th>
+                  <th>Date Posted</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                  <?php
-
-
-
-
-                  $limit = 10;  // Number of entries to show in a page. 
-                  // Look for a GET variable page if not found default is 1.      
-                  // *tl means 'tests limit'
-                  if (isset($_GET["tl"])) {  
-                    $tl  = $_GET["tl"];  
-                  }  
-                  else {  
-                    $tl=1;  
-                  };   
-                  
-                  $start_from = ($tl-1) * $limit;   
-                  
-                  $sql = "SELECT * FROM `tests` LIMIT $start_from, $limit";     
-                                  
-                  // $sql = "SELECT * FROM `tests`";
-                  $query = $con->prepare($sql);
-                  $query->execute();
-                  $tests = $query->fetchAll(PDO::FETCH_OBJ);
-                  foreach($tests as $test){
-                  
-                  ?>
-                  <tr>
-                                      <td scope="row"><?php echo $test->test_no; ?></td>
-                                      <td><?php echo $test->test_name; ?></td>
-                                      <td><?php echo $test->subject; ?></td>
-                                      <td><?php echo $test->test_date; ?></td>
-
-                                      <td> <a href="test.php?test=<?php echo $test->test_no; ?>" class="btn btn-info"> Detail <i class="fa fa-external-link"></i></a> </td>
-                                    </tr>
-                  
-                  <?php
-                  
-                  }
-                  
-                                
-                  $sql = "SELECT * FROM `tests`";
-                  $query = $con->prepare($sql);
-                  $query->execute();
-                  $total_pages =  ceil($query->rowCount()/$limit);
-                  // echo $total_pages;
-                  
-                                  ?>
-
-              
-               
+                <tr>
+                  <td scope="row">1</td>
+                  <td>Post One</td>
+                  <td>Web Development</td>
+                  <td>July 12, 2017</td>
+                  <td><a href="details.html" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Details
+                  </a></td>
+                </tr>
+                <tr>
+                  <td scope="row">2</td>
+                  <td>Post Two</td>
+                  <td>Tech Gadgets</td>
+                  <td>July 13, 2017</td>
+                  <td><a href="details.html" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Details
+                  </a></td>
+                </tr>
+                <tr>
+                  <td scope="row">3</td>
+                  <td>Post Three</td>
+                  <td>Web Development</td>
+                  <td>July 14, 2017</td>
+                  <td><a href="details.html" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Details
+                  </a></td>
+                </tr>
+                <tr>
+                  <td scope="row">4</td>
+                  <td>Post Four</td>
+                  <td>Business</td>
+                  <td>July 14, 2017</td>
+                  <td><a href="details.html" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Details
+                  </a></td>
+                </tr>
+                <tr>
+                  <td scope="row">5</td>
+                  <td>Post Five</td>
+                  <td>Web Development</td>
+                  <td>July 15 2017</td>
+                  <td><a href="details.html" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Details
+                  </a></td>
+                </tr>
+                <tr>
+                  <td scope="row">6</td>
+                  <td>Post Six</td>
+                  <td>Health & Wellness</td>
+                  <td>July 16, 2017</td>
+                  <td><a href="details.html" class="btn btn-secondary">
+                    <i class="fa fa-angle-double-right"></i> Details
+                  </a></td>
+                </tr>
               </tbody>
-              
             </table>
-            <nav class="ml-4">
-                <ul class="pagination">
-               <?php
-
-for ($i=1; $i<=$total_pages; $i++) {
-  echo '<li class="page-item"><a href="?tl='.$i.'" class="page-link">'.$i.'</a></li>';
-
-}
-?>
-                 
-                </ul>
-              </nav>
           </div>
         </div>
         <div class="col-md-3">
@@ -168,18 +195,7 @@ for ($i=1; $i<=$total_pages; $i++) {
             <div class="card-body">
               <h3>Subjects</h3>
               <h1 class="display-6">
-                <i class="fa fa-folder-open-o"></i> 
-
-
-              <?php
-              $sql="SELECT * FROM `subject`";
-              $query=$con->prepare($sql);
-              $query->execute();
-              $subjects=$query->fetchAll(PDO::FETCH_OBJ);
-              echo $query->rowCount();
-                ?>
-
-                
+                <i class="fa fa-folder-open-o"></i> 4
               </h1>
               <a href="categories.html" class="btn btn-outline-light btn-sm px-4">View</a>
             </div>
@@ -215,64 +231,90 @@ for ($i=1; $i<=$total_pages; $i++) {
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title">Add New Test</h5>
+          <h5 class="modal-title">Add Question</h5>
           <button class="close" data-dismiss="modal"><span>&times;</span></button>
         </div>
         <div class="modal-body">
-          <div id="newTestAddFormSubmitMessages"></div>
           <!-- Use Ajax to submit the form and upload into the DB & Clear All Field After Insert except [subject , test number] -->
-          <form action="./includes/admin.inc.php" method="POST" id="addTestForm" >
+          <form>
             <div class="form-group">
               <div class="form-group">
                   <label for="category">Subject</label>
-      
-                  <select class="form-control" id="subjectSelectForAddQuestions" name="subject" >
-                
+                  <select class="form-control">
+                    <option value="">Web Development</option>
+                    <option value="">Tech Gadgets</option>
+                    <option value="">Business</option>
+                    <option value="">Health & Wellness</option>
                   </select>
               </div>
-              <label for="test-number" class="text-danger">Test Name</label>
-              <input type="text" name="test-name" class="form-control">
+              <label for="test-number" class="text-danger">Test Number</label>
+              <input type="number" class="form-control">
 
+              <label for="question">Question</label>
+              <input type="text" class="form-control">
+
+              <label for="option-1">Option 1</label>
+              <input type="text" class="form-control">
+
+              
+              <label for="option-2">Option 2</label>
+              <input type="text" class="form-control">
+
+              
+              <label for="option-3">Option 3</label>
+              <input type="text" class="form-control">
+
+              
+              <label for="option-4">Option 4</label>
+              <input type="text" class="form-control">
+
+              
+
+              <label for="correct-answer" class="text-success">Correct Answer</label>
+              <input type="text" class="form-control">
             </div>
-          
+      
+            <!-- <div class="form-group">
+              <label for="file">Image Upload</label>
+              <input type="file" class="form-control-file">
+              <small class="form-text text-muted">Max Size 3mb</small>
+            </div> -->
+            <!-- <div class="form-group">
+              <label for="body">Body</label>
+              <textarea name="editor1" class="form-control"></textarea>
+            </div> -->
+          </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal" type="button" id="addTestModalCloseBtn" >Close</button>
-          <button class="btn btn-red-grad" type="submit">Add Test</button>
+          <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button class="btn btn-red-grad" data-dismiss="modal">Save Changes</button>
         </div>
-      </form>
       </div>
     </div>
   </div>
 
 
-  <!-- Subject Add MODAL -->
-  <div class="modal fade" id="addSubjectModal">
+  <!-- CATEGORY MODAL -->
+  <div class="modal fade" id="addCategoryModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header bg-info text-white">
-          <h5 class="modal-title">Add Subject</h5>
+          <h5 class="modal-title">Add Category</h5>
           <button class="close" data-dismiss="modal"><span>&times;</span></button>
         </div>
         <div class="modal-body">
-        <div id="addSubjectMessages">
-         
-          </div>
           <!-- Use Ajax and clear the field after Done -->
-          <form id="addSubjectForm" action="./includes/admin.inc.php" method="post" >
+          <form>
             <div class="form-group">
-              <label for="title">Subject Name</label>
-              <input type="text" class="form-control" name="subject" id="subjectName" require>
+              <label for="title">Title</label>
+              <input type="text" class="form-control">
             </div>
-           
-          
+          </form>
         </div>
         <div class="modal-footer">
-          
-          <button class="btn btn-secondary" id="addSubjectModalClose" data-dismiss="modal" type="button">Close</button>
-          <button class="btn btn-green-grad" type="submit">Save Changes</button>
+          <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button class="btn btn-green-grad" data-dismiss="modal">Save Changes</button>
         </div>
-        </form>
       </div>
     </div>
   </div>
@@ -286,44 +328,42 @@ for ($i=1; $i<=$total_pages; $i++) {
           <button class="close" data-dismiss="modal"><span>&times;</span></button>
         </div>
         <div class="modal-body">
-          <div id="userAddFormMessages">
-
-          </div>
            <!-- Use Ajax and clear the field after Done & Make sure to validate the email -->
-          <form action="./includes/admin.inc.php" method="post" id="addUserFormSubmit"  >
+          <form>
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" name="name" class="form-control" autofocus>
+              <input type="text" class="form-control">
             </div>
             <div class="form-group">
               <label for="email">Email</label>
-              <input type="email" name="email" class="form-control">
+              <input type="email" class="form-control">
             </div>
             <div class="form-group">
               <label for="name">Password</label>
-              <input type="password" name="password" class="form-control">
+              <input type="password" class="form-control">
             </div>
-         
-          
+            <div class="form-group">
+              <label for="name">Confirm Password</label>
+              <input type="password" class="form-control">
+            </div>
+          </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-dismiss="modal" type="button" id="addUserModalCloseBtn">Close</button>
-          <button class="btn btn-blue-grad" type="submit">Save Changes</button>
+          <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button class="btn btn-blue-grad" data-dismiss="modal">Save Changes</button>
         </div>
-      </form>
       </div>
     </div>
   </div>
 
-   <script src="js/jquery.min.js"></script>
-  <!-- <script src="js/popper.min.js"></script>
+  <!-- <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
   <script src="js/bootstrap.min.js"></script> -->
-<!--   
   <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
       crossorigin="anonymous"
-    ></script> -->
+    ></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -335,32 +375,8 @@ for ($i=1; $i<=$total_pages; $i++) {
       crossorigin="anonymous"
     ></script>
   <script src="https://cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
-  <script src="js/ajax-function.js"></script>
   <script>
       CKEDITOR.replace( 'editor1' );
   </script>
 </body>
 </html>
-
-
-
-<?php
-
-}else{
-  // echo 'not logged';
-  header('location: login.php');
-}
-
-
-
-
-
-// logout admin
-if(isset($_GET['logout'])){
-  unset($_SESSION['admin']);
-  header('location: login.php');
-}else{
-  
-  }
-
-?>

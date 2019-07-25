@@ -1,13 +1,11 @@
 <?php
 
-// logout admin
-if (isset($_GET['logout'])) {
-	// unset($_SESSION['admin']);
-	echo 'hi';
-	header('location: ../login.php');
-//    exit;
-} else {
+echo $_REQUEST['logout'];
 
+if (isset($_REQUEST['logout'])) {
+	session_start();
+	session_unset();
+	session_destroy();
+	header("Location: ../login.php");
+	exit();
 }
-
-?>

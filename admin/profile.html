@@ -1,34 +1,3 @@
-<?php
-session_start();
-include('config.php');
-
-if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
-  // echo '<h1>user logged</h1>';
-
-
-  $sql = "SELECT * FROM admin WHERE admin_email = ?";
-  $query = $con->prepare($sql);
-  $query->execute([$_SESSION['admin']]);
-  // echo '<br><h1>'.$query->rowCount().'</h1>';
-
-  $alldata=$query->fetchAll(PDO::FETCH_OBJ);
-  $admin = array(); // we will store currently logged admin email and name in this 'admin' array
-  foreach($alldata as $data){
-   $admin['name'] = $data->admin_name;
-   $admin['email'] = $data->admin_email;
-
-  }
-// print_r($admin);
-?>
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -41,38 +10,90 @@ if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-   <?php include('header.php'); // including header of admin panel ?>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+      <div class="container">
+        <a href="index.html" class="navbar-brand">Santosh Academy</a>
+        <button
+          class="navbar-toggler"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item px-2">
+              <a href="index.html" class="nav-link ">Dashboard</a>
+            </li>
+            <li class="nav-item px-2">
+              <a href="questions.html" class="nav-link">Questions</a>
+            </li>
+            <li class="nav-item px-2">
+              <a href="categories.html" class="nav-link">Subjects</a>
+            </li>
+            <li class="nav-item px-2">
+              <a href="users.html" class="nav-link">Users</a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown mr-3">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                data-toggle="dropdown"
+              >
+                <i class="fa fa-user"></i> Welcome <span>User Name</span>
+              </a>
+              <div class="dropdown-menu">
+                <a href="profile.html" class="dropdown-item">
+                  <i class="fa fa-user-circle"></i> Profile
+                </a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a href="login.html" class="nav-link">
+                <i class="fa fa-user-times"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <header id="main-header" class="py-2 bg-blue-grad text-white">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h1><i class="fa fa-user"></i> Edit Profile</h1>
+          </div>
+        </div>
+      </div>
+    </header>
 
     <!-- ACTIONS -->
     <section id="action" class="py-4 mb-4 bg-light">
       <div class="container">
         <div class="row">
           <div class="col-md-3 mr-auto">
-            <a href="index.php" class="btn btn-light btn-block">
+            <a href="index.html" class="btn btn-light btn-block">
               <i class="fa fa-arrow-left"></i> Back To Dashboard
             </a>
           </div>
           <div class="col-md-3">
             <a
-            
               href="#"
               class="btn btn-success btn-block"
               data-toggle="modal"
               data-target="#passwordModal"
             >
               <i class="fa fa-lock"></i> Change Password
-</a>
+            </a>
           </div>
           <div class="col-md-3">
-            <a
-            
-              href="#"
-              class="btn btn-danger btn-block"
-              data-toggle="modal"
-              data-target="#deleteAccountModal"
-            >
-              <i class="fa fa-trash"></i> Delete Account
-</a>
+            <a href="#" class="btn btn-danger btn-block">
+              <i class="fa fa-remove"></i> Delete Account
+            </a>
           </div>
         </div>
       </div>
@@ -91,15 +112,14 @@ if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
                 <form>
                   <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" value="<?php echo $admin['name'] ?>" />
+                    <input type="text" class="form-control" value="Santosh " />
                   </div>
                   <div class="form-group">
                     <label for="email">Email</label>
                     <input
                       type="text"
                       class="form-control"
-                      value="<?php echo $admin['email'] ?>"
-                      readonly
+                      value="test@test.com"
                     />
                   </div>
                 </form>
@@ -139,104 +159,35 @@ if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
             </button>
           </div>
           <div class="modal-body">
-            <form action="includes/admin.inc.php" method="POST" onsubmit="checkBothPasswordInputValuesAreSame()">
+            <form>
               <div class="form-group">
                 <label for="name">Password</label>
-                <input type="password" name="password" class="form-control" id="ChangePasswordInput" />
+                <input type="password" class="form-control" />
               </div>
               <div class="form-group">
                 <label for="name">Confirm Password</label>
-                <input type="password" class="form-control" id="ChangePasswordConfirmInput"  />
+                <input type="password" class="form-control" />
               </div>
-            
+            </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" data-dismiss="modal" type="button">
+            <button class="btn btn-secondary" data-dismiss="modal">
               Close
             </button>
-            <button class="btn btn-primary" type="submit" >
+            <button class="btn btn-primary" data-dismiss="modal">
               Update Password
             </button>
           </div>
-        </form>
         </div>
       </div>
     </div>
 
-
-    <!-- DELETE ACCOUNT MODAL -->
-    <div class="modal fade" id="deleteAccountModal">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title">Delete Account</h5>
-            <button class="close" data-dismiss="modal">
-              <span>&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form action="includes/admin.inc.php" method="post" id="deleteAccountForm" onsubmit="checkBothPasswordInputValuesAreSame()" >
-
-              <input type="text" name="request" value="deleteAccount" class="d-none" />
-            <div class="form-group d-none">
-                <label for="email">email</label>
-                <input type="text" name="email" id="emailToDeleteAccount" class="form-control" value="<?php echo $admin['email']; ?>" />
-              </div>
-              <div class="form-group">
-                <label for="cofirmPasswordToDeleteAccount">Password</label>
-                <input type="password" name="password" id="cofirmPasswordToDeleteAccount" class="form-control" />
-              </div>
-              
-           
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-              Close
-            </button>
-            <button class="btn btn-outline-danger disabled" id="deleteMyAccountBtn" disabled>
-            I understand the consequences, delete this account
-            </button>
-          </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-
-
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
-    <script src="js/ajax-function.js"></script>
     <script>
       CKEDITOR.replace("editor1");
-      
     </script>
   </body>
 </html>
-
-
-
-<?php
-
-}else{
-  // echo 'not logged';
-  header('location: login.php');
-}
-
-
-// logout admin
-if(isset($_GET['logout'])){
-  unset($_SESSION['admin']);
-  header('location: login.php');
- 
-}else{
-
-}
-
-
-
-
-?>

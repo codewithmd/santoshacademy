@@ -1,39 +1,47 @@
 <?php
 session_start();
-include 'config.php';
-// print_r($_POST);
 
-if (isset($_POST['admin-login'])) {
-	// echo 'coming from login form';
-	if (isset($_POST['email']) && isset($_POST['email']) && ($_POST['email'] != '') && ($_POST['password'] != '')) {
-		// echo 'email and password is ok or not null';
-		$email = $_POST['email'];
-		$password = $_POST['password'];
-		echo $email . '<br>' . $password;
+if (isset($_POST['submit'])) {
 
-		$sql = "SELECT * FROM admin WHERE admin_email = ? AND admin_password = ?";
-		$query = $con->prepare($sql);
-		$query->execute([$email, $password]);
-		echo '<br>' . $query->rowCount();
-		if ($query->rowCount() != 0 || $query->rowCount() > 0) {
-			// echo "</br>Admin founded. <strong style='color:green'> OK. ✔";
-			$_SESSION['admin'] = $email;
-			header('location: ../index.php');
-		} else {
-			// echo"</br>Admin not founded with this email and password <strong style='color:red'> unable to login. ";
-			// *e means 'error' and *eapne = email and password not match
-			header('location: ../login.php?e=eapnm');
-		}
+  include 'dbh.inc.php';
 
+	$email = $_POST['email'];
+	$pwd = $_POST['password'];
+
+	//Error handlers
+	//Check if inputs are empty
+	if (empty($email) || empty($pwd)) {
+		header("Location: ../login.php?login=empty");
+		exit();
 	} else {
-		// echo 'email and password is null';
-		// *e means 'error' and *eopn = 'email or password null'
-		header('location: ../login.php?e=eopn');
+		$sql = "SELECT * FROM `admin` WHERE `admin_email`=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$email]);
+    
+    
+
+		if ($stmt->rowCount() < 1) {
+			header("Location: ../login.php?login=error");
+			exit();
+		} else {
+			if ($user = $stmt->fetch()) {
+				//Check Password
+				$correctPassword = $pwd === $user['admin_password'] ? true : false;
+				if ($correctPassword == false) {
+					header("Location: ../login.php?login=password not matched");
+					exit();
+				} elseif ($correctPassword == true) {
+					//Log in the user here
+					$_SESSION['a_id'] = $user['admin_id'];
+					$_SESSION['a_email'] = $user['admin_email'];
+
+					header("Location: ../index.php?login=success");
+					exit();
+				}
+			}
+		}
 	}
 } else {
-	// echo 'not coming from login form';
-	// *e means 'error' and *iv = 'illegal visit'
-	header('location: ../login.php?e=iv');
+	header("Location: ../login.php?login=error");
+	exit();
 }
-
-?>
