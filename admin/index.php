@@ -357,11 +357,9 @@ for ($i=1; $i<=$total_pages; $i++) {
 
 // logout admin
 if(isset($_GET['logout'])){
-   unset($_SESSION['admin']);
-
-    header('location: login.php');
-
-  }else{
+  unset($_SESSION['admin']);
+  header('location: login.php');
+}else{
   
   }
 

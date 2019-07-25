@@ -46,16 +46,14 @@ if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
             </div>
           </li>
           <li class="nav-item">
-            <a id="logout" href="#" class="nav-link" onclick="logout()">
+            <a id="logout" href="/admin/index.php?logout" class="nav-link" onclick="logout()">
               <i class="fa fa-user-times"></i> Logout
               <script>
                 function logout(){
                   // alert('io');
                   let askingForLogout = confirm('Are Sure You Want To Logout?');
                   if(askingForLogout){
-
-                    console.log('logout');
-                    window.location = 'http://localhost:8001/admin/index.php?logout';
+                    return true;
                   }else{
                     return false;
                   }
