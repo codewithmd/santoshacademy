@@ -1,3 +1,14 @@
+<?php
+session_start();
+include('config.php');
+
+if(isset($_SESSION['admin']) && ($_SESSION['admin'] != null) ){
+  header('location: index.php');
+}else{
+  
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -53,20 +64,62 @@
           <div class="col-md-6 mx-auto">
             <div class="card">
               <div class="card-header">
-                <h4>Account Login</h4>
+                <h4>Admin Login</h4>
+
+<?php
+
+if(isset($_GET['e'])){
+ echo '<div class="error-messages"><div class="alert alert-danger" role="alert">';
+ $errorType = $_GET['e'];
+
+ switch ($errorType) {
+     case "eapnm":
+         echo "Your Email and Password are not match!";
+         break;
+     case "eopn":
+         echo "Please Fill Email and Password";
+         break;
+     case "iv":
+         echo "Please login with correct Email and Password";
+         break;
+     default:
+         echo "Please Login First";
+ }
+ 
+echo '</div></div>';
+}else{
+
+}
+
+
+?>
+
+
+
+                
               </div>
               <div class="card-body">
-                <form action="index.html">
+                <form action="includes/login.inc.php" method="post">
                   <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" class="form-control" />
+                    <input
+                      type="email"
+                      name="email"
+                      class="form-control"
+                      autofocus
+                    />
                   </div>
                   <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" />
+                    <input
+                      type="password"
+                      name="password"
+                      class="form-control"
+                    />
                   </div>
                   <input
                     type="submit"
+                    name="admin-login"
                     class="btn btn-blue-grad btn-block font-weight-bold"
                     value="Login"
                   />
@@ -114,3 +167,10 @@
     </script>
   </body>
 </html>
+
+<?php
+}
+
+
+
+?>
