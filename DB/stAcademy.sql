@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb5
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jul 25, 2019 at 12:21 PM
--- Server version: 5.7.26-0ubuntu0.18.10.1
--- PHP Version: 7.2.19-0ubuntu0.18.10.1
+-- Host: 127.0.0.1
+-- Generation Time: Jul 28, 2019 at 07:28 PM
+-- Server version: 10.3.16-MariaDB
+-- PHP Version: 7.2.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -17,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `stAcademy`
+-- Database: `stacademy`
 --
 
 -- --------------------------------------------------------
@@ -38,7 +40,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`admin_id`, `admin_name`, `admin_email`, `admin_password`) VALUES
-(7, 'Santosh', 'admin@gmail.com', 'zzzz');
+(7, 'Santosh', 'admin@gmail.com', 'admin0123');
 
 -- --------------------------------------------------------
 
@@ -49,7 +51,7 @@ INSERT INTO `admin` (`admin_id`, `admin_name`, `admin_email`, `admin_password`) 
 CREATE TABLE `question` (
   `id` int(10) UNSIGNED NOT NULL,
   `question` text NOT NULL,
-  `options` json NOT NULL,
+  `options` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `answer` text NOT NULL,
   `test_number` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -70,22 +72,24 @@ INSERT INTO `question` (`id`, `question`, `options`, `answer`, `test_number`) VA
 
 CREATE TABLE `subject` (
   `sub_id` int(10) UNSIGNED NOT NULL,
-  `sub_name` varchar(250) NOT NULL,
-  `admin` varchar(200) NOT NULL
+  `sub_name` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `subject`
 --
 
-INSERT INTO `subject` (`sub_id`, `sub_name`, `admin`) VALUES
-(1, 'Web Development', 'admin@gmail.com'),
-(2, 'App Development', 'admin@gmail.com'),
-(3, 'BCA', 'admin@gmail.com'),
-(4, 'web', 'admin@gmail.com'),
-(5, 'MCA', 'admin@gmail.com'),
-(6, 'NodeJs', 'admin@gmail.com'),
-(7, 'IOS development', 'admin@gmail.com');
+INSERT INTO `subject` (`sub_id`, `sub_name`) VALUES
+(8, 'OTET'),
+(9, 'SS'),
+(10, 'CT'),
+(11, 'OSSTET'),
+(12, 'CONTRACTUAL'),
+(13, 'B.Ed'),
+(14, 'B.P.Ed'),
+(15, 'CTET'),
+(16, 'OAVS'),
+(17, 'M.Ed');
 
 -- --------------------------------------------------------
 
@@ -125,18 +129,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_password`) VALUES
-(1, 'applw', 'apple@gmail.com', 'apple1234'),
-(2, 'micle', 'micle@gmail.com', 'micle1234'),
-(3, 'sfca', 'fgugvu@agbsch.fchshgb', 'hbiujbib'),
-(4, 'hnoujcbsa', 'dvcsd@acvg.scyags', 'hbiujbib'),
-(5, 'sascabvh', 'ohoincja@svcsgabs.asc', 'hbiujbib'),
-(6, 'sahcu9a', 'huhguyib@fgcvfgd.acasgu', 'guycgbvzxhc'),
-(7, 'bhucvbzds', 'hiuacgbs@cs.chhasg', 'guycgbvzxhc'),
-(8, 'znadbn', 'uhvuhvuh@dcxhgas.chasy', 'guycgbvzxhc'),
-(9, 'adqaty', 'vcygsdcv@cfsa.asscs', 'guycgbvzxhc'),
-(10, 'scvaytgcv', 'buyhvbcygzv@scvgabs.caf', 'guycgbvzxhc'),
-(11, 'adas', 'jjgiyuhb@rfscxats.sxas', 'guvguyv'),
-(12, 'niusqw', 'ijbh@safxg.sxcas', 'guvguyv');
+(13, 'asds', 'asdf@gmail.com', 'asdf');
 
 --
 -- Indexes for dumped tables
@@ -181,26 +174,32 @@ ALTER TABLE `users`
 --
 ALTER TABLE `admin`
   MODIFY `admin_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
 --
 -- AUTO_INCREMENT for table `question`
 --
 ALTER TABLE `question`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
 --
 -- AUTO_INCREMENT for table `subject`
 --
 ALTER TABLE `subject`
-  MODIFY `sub_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `sub_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
 --
 -- AUTO_INCREMENT for table `tests`
 --
 ALTER TABLE `tests`
   MODIFY `test_no` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
