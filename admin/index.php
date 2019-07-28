@@ -16,7 +16,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Prayas Admin Area</title>
+  <title>Prayash Admin Area</title>
   <link rel="stylesheet" href="css/font-awesome.min.css">
   <!-- <link rel="stylesheet" href="css/bootstrap.css"> -->
   <link
@@ -28,7 +28,7 @@
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
     <div class="container">
-      <a href="index.html" class="navbar-brand">Santosh Academy</a>
+      <a href="index.html" class="navbar-brand">Prayash</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -84,12 +84,12 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <a href="#" class="btn btn-red-grad btn-block" data-toggle="modal" data-target="#addQuestion">
+          <a href="#" class="btn btn-red-grad btn-block" data-toggle="modal" data-target="#addQuestionModal">
             <i class="fa fa-plus"></i> <b>Add Question</b>
           </a>
         </div>
         <div class="col-md-3">
-          <a href="#" class="btn btn-green-grad btn-block" data-toggle="modal" data-target="#addCategoryModal">
+          <a href="#" class="btn btn-green-grad btn-block" data-toggle="modal" data-target="#addSubjectModal">
             <i class="fa fa-plus"></i> <b>Add Subject</b>
           </a>
         </div>
@@ -219,7 +219,7 @@
     <div class="conatiner">
       <div class="row">
         <div class="col">
-          <p class="lead text-center">Copyright &copy; 2019 Santosh Academy</p>
+          <p class="lead text-center">Copyright &copy; 2019 Prayash Academy</p>
         </div>
       </div>
     </div>
@@ -227,7 +227,7 @@
 
 
   <!-- QUESTION MODAL -->
-  <div class="modal fade" id="addQuestion">
+  <div class="modal fade" id="addQuestionModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header bg-danger text-white">
@@ -285,35 +285,41 @@
             </div> -->
           </form>
         </div>
+        <div id="responseQuestion" class="ml-4 h6">
+          
+        </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button class="btn btn-red-grad" data-dismiss="modal">Save Changes</button>
+          <button class="btn btn-red-grad">Save Changes</button>
         </div>
       </div>
     </div>
   </div>
 
 
-  <!-- CATEGORY MODAL -->
-  <div class="modal fade" id="addCategoryModal">
+  <!-- SUBJECT MODAL -->
+  <div class="modal fade" id="addSubjectModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header bg-info text-white">
-          <h5 class="modal-title">Add Category</h5>
+          <h5 class="modal-title">Add Subject</h5>
           <button class="close" data-dismiss="modal"><span>&times;</span></button>
         </div>
         <div class="modal-body">
           <!-- Use Ajax and clear the field after Done -->
-          <form>
+          <form action="" method="POST" id="addSubjectForm">
             <div class="form-group">
-              <label for="title">Title</label>
-              <input type="text" class="form-control">
+              <label for="title">Subject Name</label>
+              <input type="text" class="form-control" id="subject" name="subject">
             </div>
           </form>
         </div>
+        <div id="responseSubject" class="ml-4 h6">
+          
+        </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button class="btn btn-green-grad" data-dismiss="modal">Save Changes</button>
+          <button class="btn btn-green-grad" id="btnAddSubject">Save Changes</button>
         </div>
       </div>
     </div>
@@ -329,28 +335,33 @@
         </div>
         <div class="modal-body">
            <!-- Use Ajax and clear the field after Done & Make sure to validate the email -->
-          <form>
+          <form action="" method="POST" id="addUserForm">
             <div class="form-group">
               <label for="name">Name</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" id="name" name="name" autofocus>
             </div>
             <div class="form-group">
               <label for="email">Email</label>
-              <input type="email" class="form-control">
+              <input type="email" class="form-control" id="email" name="email">
             </div>
             <div class="form-group">
               <label for="name">Password</label>
-              <input type="password" class="form-control">
+              <input type="password" class="form-control" id="password" name="password">
             </div>
             <div class="form-group">
               <label for="name">Confirm Password</label>
-              <input type="password" class="form-control">
+              <input type="password" class="form-control" id="cnf_password" name="cnf_password">
             </div>
           </form>
         </div>
+        
+        <div id="responseUser" class="ml-4 h6">
+          
+        </div>
+        
         <div class="modal-footer">
           <button class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button class="btn btn-blue-grad" data-dismiss="modal">Save Changes</button>
+          <button class="btn btn-blue-grad" id="btnAddUser">Save Changes</button>
         </div>
       </div>
     </div>
@@ -378,5 +389,8 @@
   <script>
       CKEDITOR.replace( 'editor1' );
   </script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/main.js"></script>
+
 </body>
 </html>
